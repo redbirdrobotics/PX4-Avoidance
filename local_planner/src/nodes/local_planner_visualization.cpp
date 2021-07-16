@@ -79,7 +79,7 @@ void LocalPlannerVisualization::publishFOV(const std::vector<FOV>& fov_vec, floa
                   max_range);
 
     visualization_msgs::Marker m;
-    m.header.frame_id = "fcu";
+    m.header.frame_id = "base_link";
     m.header.stamp = ros::Time::now();
     m.id = i;
     m.type = visualization_msgs::Marker::TRIANGLE_LIST;
@@ -116,7 +116,7 @@ void LocalPlannerVisualization::publishFOV(const std::vector<FOV>& fov_vec, floa
 void LocalPlannerVisualization::publishOfftrackPoints(Eigen::Vector3f& closest_pt, Eigen::Vector3f& deg60_pt) {
   visualization_msgs::Marker m;
 
-  m.header.frame_id = "local_origin";
+  m.header.frame_id = "map";
   m.header.stamp = ros::Time::now();
   m.type = visualization_msgs::Marker::SPHERE;
   m.action = visualization_msgs::Marker::ADD;
@@ -146,7 +146,7 @@ void LocalPlannerVisualization::publishOfftrackPoints(Eigen::Vector3f& closest_p
 void LocalPlannerVisualization::publishTree(const std::vector<TreeNode>& tree, const std::vector<int>& closed_set,
                                             const std::vector<Eigen::Vector3f>& path_node_positions) const {
   visualization_msgs::Marker tree_marker;
-  tree_marker.header.frame_id = "local_origin";
+  tree_marker.header.frame_id = "map";
   tree_marker.header.stamp = ros::Time::now();
   tree_marker.id = 0;
   tree_marker.type = visualization_msgs::Marker::LINE_LIST;
@@ -159,7 +159,7 @@ void LocalPlannerVisualization::publishTree(const std::vector<TreeNode>& tree, c
   tree_marker.color.b = 0.6;
 
   visualization_msgs::Marker path_marker;
-  path_marker.header.frame_id = "local_origin";
+  path_marker.header.frame_id = "map";
   path_marker.header.stamp = ros::Time::now();
   path_marker.id = 0;
   path_marker.type = visualization_msgs::Marker::LINE_LIST;
@@ -195,7 +195,7 @@ void LocalPlannerVisualization::publishGoal(const geometry_msgs::Point& goal) co
   visualization_msgs::MarkerArray marker_goal;
   visualization_msgs::Marker m;
 
-  m.header.frame_id = "local_origin";
+  m.header.frame_id = "map";
   m.header.stamp = ros::Time::now();
   m.type = visualization_msgs::Marker::SPHERE;
   m.action = visualization_msgs::Marker::ADD;
@@ -218,7 +218,7 @@ void LocalPlannerVisualization::publishBox(const Eigen::Vector3f& drone_pos, flo
   visualization_msgs::MarkerArray marker_array;
 
   visualization_msgs::Marker box;
-  box.header.frame_id = "local_origin";
+  box.header.frame_id = "map";
   box.header.stamp = ros::Time::now();
   box.id = 0;
   box.type = visualization_msgs::Marker::SPHERE;
@@ -238,7 +238,7 @@ void LocalPlannerVisualization::publishBox(const Eigen::Vector3f& drone_pos, flo
   marker_array.markers.push_back(box);
 
   visualization_msgs::Marker plane;
-  plane.header.frame_id = "local_origin";
+  plane.header.frame_id = "map";
   plane.header.stamp = ros::Time::now();
   plane.id = 1;
   plane.type = visualization_msgs::Marker::CUBE;
@@ -263,7 +263,7 @@ void LocalPlannerVisualization::publishBox(const Eigen::Vector3f& drone_pos, flo
 
 void LocalPlannerVisualization::publishReachHeight(const Eigen::Vector3f& take_off_pose, float starting_height) const {
   visualization_msgs::Marker m;
-  m.header.frame_id = "local_origin";
+  m.header.frame_id = "map";
   m.header.stamp = ros::Time::now();
   m.type = visualization_msgs::Marker::CUBE;
   m.pose.position.x = take_off_pose.x();
@@ -286,7 +286,7 @@ void LocalPlannerVisualization::publishReachHeight(const Eigen::Vector3f& take_o
   initial_height_pub_.publish(m);
 
   visualization_msgs::Marker t;
-  t.header.frame_id = "local_origin";
+  t.header.frame_id = "map";
   t.header.stamp = ros::Time::now();
   t.type = visualization_msgs::Marker::SPHERE;
   t.action = visualization_msgs::Marker::ADD;
@@ -369,7 +369,7 @@ void LocalPlannerVisualization::visualizeWaypoints(const Eigen::Vector3f& goto_p
 
   ros::Time now = ros::Time::now();
 
-  sphere1.header.frame_id = "local_origin";
+  sphere1.header.frame_id = "map";
   sphere1.header.stamp = now;
   sphere1.id = 0;
   sphere1.type = visualization_msgs::Marker::SPHERE;
@@ -387,7 +387,7 @@ void LocalPlannerVisualization::visualizeWaypoints(const Eigen::Vector3f& goto_p
   sphere1.color.g = 1.0;
   sphere1.color.b = 0.0;
 
-  sphere2.header.frame_id = "local_origin";
+  sphere2.header.frame_id = "map";
   sphere2.header.stamp = now;
   sphere2.id = 0;
   sphere2.type = visualization_msgs::Marker::SPHERE;
@@ -405,7 +405,7 @@ void LocalPlannerVisualization::visualizeWaypoints(const Eigen::Vector3f& goto_p
   sphere2.color.g = 1.0;
   sphere2.color.b = 0.0;
 
-  sphere3.header.frame_id = "local_origin";
+  sphere3.header.frame_id = "map";
   sphere3.header.stamp = now;
   sphere3.id = 0;
   sphere3.type = visualization_msgs::Marker::SPHERE;
@@ -435,7 +435,7 @@ void LocalPlannerVisualization::publishPaths(const geometry_msgs::Point& last_po
                                              const geometry_msgs::Point& newest_adapted_wp) {
   // publish actual path
   visualization_msgs::Marker path_actual_marker;
-  path_actual_marker.header.frame_id = "local_origin";
+  path_actual_marker.header.frame_id = "map";
   path_actual_marker.header.stamp = ros::Time::now();
   path_actual_marker.id = path_length_;
   path_actual_marker.type = visualization_msgs::Marker::LINE_STRIP;
@@ -453,7 +453,7 @@ void LocalPlannerVisualization::publishPaths(const geometry_msgs::Point& last_po
 
   // publish path set by calculated waypoints
   visualization_msgs::Marker path_waypoint_marker;
-  path_waypoint_marker.header.frame_id = "local_origin";
+  path_waypoint_marker.header.frame_id = "map";
   path_waypoint_marker.header.stamp = ros::Time::now();
   path_waypoint_marker.id = path_length_;
   path_waypoint_marker.type = visualization_msgs::Marker::LINE_STRIP;
@@ -471,7 +471,7 @@ void LocalPlannerVisualization::publishPaths(const geometry_msgs::Point& last_po
 
   // publish path set by calculated waypoints
   visualization_msgs::Marker path_adapted_waypoint_marker;
-  path_adapted_waypoint_marker.header.frame_id = "local_origin";
+  path_adapted_waypoint_marker.header.frame_id = "map";
   path_adapted_waypoint_marker.header.stamp = ros::Time::now();
   path_adapted_waypoint_marker.id = path_length_;
   path_adapted_waypoint_marker.type = visualization_msgs::Marker::LINE_STRIP;
@@ -494,7 +494,7 @@ void LocalPlannerVisualization::publishCurrentSetpoint(const geometry_msgs::Twis
                                                        const waypoint_choice& waypoint_type,
                                                        const geometry_msgs::Point& newest_pos) const {
   visualization_msgs::Marker setpoint;
-  setpoint.header.frame_id = "local_origin";
+  setpoint.header.frame_id = "map";
   setpoint.header.stamp = ros::Time::now();
   setpoint.id = 0;
   setpoint.type = visualization_msgs::Marker::ARROW;
@@ -545,7 +545,7 @@ void LocalPlannerVisualization::publishGround(const Eigen::Vector3f& drone_pos, 
                                               float ground_distance) const {
   visualization_msgs::Marker plane;
 
-  plane.header.frame_id = "local_origin";
+  plane.header.frame_id = "map";
   plane.header.stamp = ros::Time::now();
   plane.id = 1;
   plane.type = visualization_msgs::Marker::CUBE;

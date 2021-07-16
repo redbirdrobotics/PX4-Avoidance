@@ -478,7 +478,7 @@ void LocalPlannerNode::pointCloudCallback(const sensor_msgs::PointCloud2::ConstP
   if (!cameras_[index].transform_registered_) {
     std::pair<std::string, std::string> transform_frames;
     transform_frames.first = msg->header.frame_id;
-    transform_frames.second = "/local_origin";
+    transform_frames.second = "/map";
     buffered_transforms_.push_back(transform_frames);
     cameras_[index].transform_registered_ = true;
   }
@@ -581,7 +581,7 @@ void LocalPlannerNode::pointCloudTransformThread(int index) {
           new std::lock_guard<std::mutex>(*(cameras_[index].cloud_msg_mutex_)));
 
       tf::StampedTransform transform;
-      if (tf_buffer_.getTransform(cameras_[index].newest_cloud_msg_.header.frame_id, "/local_origin",
+      if (tf_buffer_.getTransform(cameras_[index].newest_cloud_msg_.header.frame_id, "/map",
                                   cameras_[index].newest_cloud_msg_.header.stamp, transform)) {
         pcl::PointCloud<pcl::PointXYZ> pcl_cloud;
         // transform message to pcl type
@@ -590,12 +590,12 @@ void LocalPlannerNode::pointCloudTransformThread(int index) {
 
         // remove nan padding and compute fov
         pcl::PointCloud<pcl::PointXYZ> maxima = removeNaNAndGetMaxima(pcl_cloud);
-        pcl_ros::transformPointCloud("fcu", maxima, maxima, *tf_listener_);
+        pcl_ros::transformPointCloud("base_link", maxima, maxima, *tf_listener_);
         updateFOVFromMaxima(cameras_[index].fov_fcu_frame_, maxima);
 
-        // transform cloud to /local_origin frame
+        // transform cloud to /map frame
         pcl_ros::transformPointCloud(pcl_cloud, pcl_cloud, transform);
-        pcl_cloud.header.frame_id = "/local_origin";
+        pcl_cloud.header.frame_id = "/map";
 
         std::lock_guard<std::mutex> transformed_cloud_guard(*(cameras_[index].transformed_cloud_mutex_));
         cameras_[index].transformed_ = true;
